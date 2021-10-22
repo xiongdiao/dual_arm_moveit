@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="paused" default="true"/>
+  <arg name="gui" default="true"/>
+  <arg name="sim" default="true" />
+  <arg name="debug" default="false"/>
+
+  <!-- startup simulated world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" default="$(find ur5_dual_arm_tufts)/worlds/ur5_dual_arm_env.world"/>
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="gui" value="$(arg gui)"/>
+  </include>
+
+  <!-- send robot urdf to param server -->
+  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find ur5_dual_arm_tufts)/urdf/ur5_dual_arm.xacro'"/>
+
+  <node name="spawn_gazebo_model" pkg="gazebo_ros" type="spawn_model" 
+     respawn="false" output="screen"
+     args="-urdf -param robot_description 
+     -model robot 
+     -z 0.1 
+     -J left_shoulder_pan_joint -2.11
+     -J left_shoulder_lift_joint -0.87  
+     -J left_elbow_joint 1.32  
+     -J left_wrist_1_joint -0.23  
+     -J left_wrist_2_joint 0.0 
+     -J left_wrist_3_joint -1.29
+     -J right_shoulder_pan_joint 2.01
+     -J right_shoulder_lift_joint -2.11  
+     -J right_elbow_joint -1.17  
+     -J right_wrist_1_joint -2.48  
+     -J right_wrist_2_joint -0.11 
+     -J right_wrist_3_joint -1.84 
+     -unpause" /> 
+
+</launch>
